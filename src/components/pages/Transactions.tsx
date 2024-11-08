@@ -8,13 +8,14 @@ import CancelIcon from '@mui/icons-material/Cancel';  // For expenses
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Dispatch, SetStateAction, useState } from "react";
+import Pie from "../charts/PieChart.tsx";
 
 interface inputTypesProps {
   transactions: inputTypes[];
   setTransactions: Dispatch<SetStateAction<inputTypes[]>>;
 }
 export default function Transactions({transactions,setTransactions}:inputTypesProps){
-
+    
 
     const [editTransaction, setEditTransaction] = useState<inputTypes | null>(null);
     
@@ -49,6 +50,7 @@ export default function Transactions({transactions,setTransactions}:inputTypesPr
 
 
     return(
+      <>
         <Box sx={{ display: 'flex', height: '100vh' }}>
             <CssBaseline />
             <Sidebar />
@@ -131,10 +133,20 @@ export default function Transactions({transactions,setTransactions}:inputTypesPr
               </div>
             ))}
           </List>
+          <Pie transactions={transactions}/>
                 </Box>
+                
                 <Footer />
+
+                
             </Box>
+
+
+          
         </Box>
+       
+       
+      </>
     )
     
 }
