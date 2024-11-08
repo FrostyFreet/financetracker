@@ -1,39 +1,50 @@
-import { PieChart } from '@mui/x-charts/PieChart';
+import { PieChart } from "@mui/x-charts/PieChart";
 import { inputTypes } from "../TransactionForm";
-
 interface inputTypesProps {
-    transactions: inputTypes[]
-    
+	transactions: inputTypes[];
 }
+export interface ChartData {
+	value: number;
+	label: string;
+	color: string;
+	type?:string;
+  }
 
-export default function Pie({transactions}:inputTypesProps){
+export default function Pie({ transactions }: inputTypesProps) {
+	const data = transactions.reduce<ChartData[]>((acc, t) => {
+        const existing = acc.find(item => item.label === t.category && t.type===item.type);
+        if (existing) {
+          existing.value = Number(existing.value) + Number(t.amount)
+        } else {
+          acc.push({
+            value: Number(t.amount),
+            label: t.category,
+            color: t.type === "income" ? "#4caf50" : "#f44336"
+          });
+        }
+        return acc;
+      }, []);
 
-    const data=[...transactions.map((t)=>({
-        id:t.id,
-        value:t.amount,
-        label:t.category
-    }))]
 
-    const size = {
-  width: 1000,
-  height: 200,
-};
-    return(
-      <>
-      {data.length>0 ? <PieChart
-        series={[
-          {
-            data: data, 
-            paddingAngle: 1, 
-          },
-        ]}
-
-        {...size} 
-      /> : <h1 style={{textAlign:'center'}}>No transactions added</h1>
-    }
-        
-
-      </>
-    )
-
+	const size = {
+		width: 1000,
+		height: 200,
+	};
+	return (
+		<>
+			{data.length > 0 ? (
+				<PieChart
+					series={[
+						{
+							data: data,
+							paddingAngle: 1,
+						},
+					]}
+					{...size}
+				/>
+			) : (
+				<h1 style={{ textAlign: "center" }}>No transactions added</h1>
+			)}
+		</>
+	);
 }
