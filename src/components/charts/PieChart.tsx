@@ -8,6 +8,7 @@ export interface ChartData {
 	label: string;
 	color: string;
 	type?:string;
+	date?:string;
   }
 
 export default function Pie({ transactions }: inputTypesProps) {

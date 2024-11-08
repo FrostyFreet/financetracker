@@ -84,7 +84,7 @@ export default function TransactionForm({onSubmit,setChartType,chartType}:transa
 					<br />
                     <FormControl>
 
-                        <InputLabel id="Chart_Type">Chart Type</InputLabel>   
+                    <InputLabel id="Chart_Type">Chart Type</InputLabel>   
 					<Select
 						labelId="Chart_Type"
 						id="Chart_Type"
@@ -93,7 +93,6 @@ export default function TransactionForm({onSubmit,setChartType,chartType}:transa
 						onChange={handleChartTypeChange}
 					>
 						<MenuItem value={"pie"}>Pie Chart</MenuItem>
-						<MenuItem value={"bar"}>Bar Chart</MenuItem>
 						<MenuItem value={"line"}>Line Chart</MenuItem>
 					</Select>
                     </FormControl>

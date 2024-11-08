@@ -15,7 +15,8 @@ export default function Line({transactions}:inputTypesProps){
           acc.push({
             value: Number(t.amount),
             label: t.category,
-            color: t.type === "income" ? "#4caf50" : "#f44336"
+            color: t.type === "income" ? "#4caf50" : "#f44336",
+            date:t.date
           });
         }
         return acc;
@@ -23,7 +24,7 @@ export default function Line({transactions}:inputTypesProps){
     return(
         <>{data.length > 0 ? (
                 <LineChart
-                xAxis={[{ data: data.map((item)=>(item.label)),scaleType:'band' }]}
+                xAxis={[{ data: data.map((item)=>(item.date)),scaleType:'band' }]}
                 series={[
                 {
                     data:data.map((item)=>(item.value))

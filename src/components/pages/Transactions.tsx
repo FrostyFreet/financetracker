@@ -3,11 +3,17 @@ import {
 	Button,
 	CssBaseline,
 	Divider,
+	FormControl,
 	IconButton,
+	Input,
+	InputLabel,
 	List,
 	ListItem,
 	ListItemIcon,
 	ListItemText,
+	MenuItem,
+	Select,
+	SelectChangeEvent,
 	TextField,
 } from "@mui/material";
 import { inputTypes } from "../TransactionForm.tsx";
@@ -24,21 +30,20 @@ interface inputTypesProps {
 	transactions: inputTypes[];
 	setTransactions: Dispatch<SetStateAction<inputTypes[]>>;
 }
-export default function Transactions({
-	transactions,
-	setTransactions,
-}: inputTypesProps) {
-	const [editTransaction, setEditTransaction] = useState<inputTypes | null>(
-		null
-	);
+export default function Transactions({transactions,setTransactions,}: inputTypesProps) {
+	
+	
 
+
+	const [editTransaction, setEditTransaction] = useState<inputTypes | null>(null);
+	const [filter,setFilter]=useState<string>('')	
+	const [searchTerm,setSearchTerm]=useState<string>('')
+	
 	function deleteButton(id: string) {
 		const taskToDelete = transactions.filter((t) => t.id !== id);
 		setTransactions(taskToDelete);
 	}
-	function editButton(id: inputTypes) {
-		setEditTransaction(id); // Set the transaction to edit
-	}
+	function editButton(id: inputTypes) {setEditTransaction(id)}
 
 	function handleEditChange(e: React.ChangeEvent<HTMLInputElement>) {
 		if (editTransaction) {
@@ -57,9 +62,40 @@ export default function Transactions({
 				)
 			);
 			setEditTransaction(null); // Reset edit mode
-		}
+		}}
+
+	function filterHandler(e:SelectChangeEvent){setFilter(e.target.value);}
+
+	function handleSearchBar(e:React.ChangeEvent<HTMLInputElement>){
+		setSearchTerm(e.target.value)
 	}
 
+
+	let filteredTransactions = [...transactions];
+
+	const sortedByDate = [...transactions].sort((a, b) => Number(new Date(a.date)) - Number(new Date(b.date)));
+	const sortedAscending = [...transactions].sort((a, b) => a.amount - b.amount);
+	const sortedDescending = [...transactions].sort((a, b) => b.amount - a.amount);
+	const sortedByExpenseType = [...transactions].sort((a, b) => {
+		const typeA = a.type ?? ''; 
+		const typeB = b.type ?? ''; 
+		return typeA.localeCompare(typeB);
+	  });
+	const sortedByIncomeType = [...transactions].sort((a, b) => {
+		const typeA = a.type ?? ''; 
+		const typeB = b.type ?? ''; 
+		return typeB.localeCompare(typeA);
+	  });
+
+	if (filter === 'date') {filteredTransactions = sortedByDate} 
+	else if (filter === '2highest') {filteredTransactions = sortedAscending} 
+	else if (filter === '2lowest') {filteredTransactions = sortedDescending}
+	else if(filter==='byExpense'){filteredTransactions = sortedByExpenseType}
+	else if(filter==='byIncome'){filteredTransactions = sortedByIncomeType}
+
+	const filteredAndSearchedTransactions = filteredTransactions.filter((transaction) =>
+		transaction.category.toLowerCase().includes(searchTerm.toLowerCase())
+	  );
 	return (
 		<>
 			<Box sx={{ display: "flex", height: "100vh" }}>
@@ -67,10 +103,44 @@ export default function Transactions({
 				<Sidebar />
 				<Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
 					<Header />
+
+					
+					<FormControl sx={{ m: 1, maxWidth: 120, float:'right' }} size="medium">
+					<Input
+						placeholder="Search"
+						type="text"
+						name="searchTerm"
+						value={searchTerm}
+						onChange={handleSearchBar}
+						required
+					/>
+
+					</FormControl>
+
+					<FormControl sx={{ m: 1, maxWidth: 120 }} size="medium">
+						<InputLabel id="Transaction_Type">Filter</InputLabel>
+						<Select
+							labelId="Transaction_Type"
+							id="Transaction_Type"
+							value={filter}
+							label="Transaction Type"
+							onChange={filterHandler}
+						>
+							<MenuItem value={"date"}>Date</MenuItem>
+							<MenuItem value={"2highest"}>Lowest To Highest</MenuItem>
+							<MenuItem value={"2lowest"}>Highest To Lowest</MenuItem>
+							<MenuItem value={"byExpense"}>Expenses First</MenuItem>
+							<MenuItem value={"byIncome"}>Incomes First</MenuItem>
+		
+						</Select>
+					</FormControl>
+
 					<Box sx={{ flexGrow: 1, p: 3, bgcolor: "#f5f5f5" }}>
 						<List>
-							{transactions.map((transaction) => (
+						{filteredAndSearchedTransactions.length===0 && <h1 style={{textAlign:'center'}}>No transactions added</h1>}
+							{filteredAndSearchedTransactions.map((transaction)=> (
 								<div key={transaction.id}>
+									 
 									{editTransaction && editTransaction.id === transaction.id ? (
 										// Render edit form for the selected transaction
 										<Box
@@ -113,6 +183,7 @@ export default function Transactions({
 										</Box>
 									) : (
 										// Regular display of the transaction item
+										
 										<ListItem
 											sx={{
 												backgroundColor:
