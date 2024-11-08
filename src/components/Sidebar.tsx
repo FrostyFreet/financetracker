@@ -1,7 +1,6 @@
 import { Drawer, List, ListItemText, ListItemIcon, Box} from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-import SavingsIcon from '@mui/icons-material/Savings';
 import { Link } from 'react-router-dom';
 
 
@@ -37,14 +36,7 @@ export default function Sidebar() {
                         <ListItemText primary="Transactions" />
                     </Box>
                 </Link>
-                <Link to="/budget" style={{textDecoration:"none", color:"white"}}>
-                <Box component="li" sx={{ display: 'flex', alignItems: 'center', padding: '8px 16px', cursor: 'pointer', '&:hover': { backgroundColor: '#555' } }}>
-                    <ListItemIcon sx={{ color: '#fff' }}>
-                        <SavingsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Budget Goals" />
-                </Box>
-                </Link>
+               
             </List>
         </Drawer>
     );

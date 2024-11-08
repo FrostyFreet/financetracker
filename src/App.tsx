@@ -4,7 +4,7 @@ import ErrorPage from "./components/pages/ErrorPage.tsx";
 import Transactions from "./components/pages/Transactions.tsx";
 import { useState } from "react";
 import { inputTypes } from "./components/TransactionForm.tsx";
-import Budget from "./components/pages/Budget.tsx";
+
 
 function App() {
 	const [transactions, setTransactions] = useState<inputTypes[]>([]);
@@ -29,11 +29,7 @@ function App() {
 			),
 			errorElement: <ErrorPage />,
 		},
-		{
-			path: "/budget",
-			element: <Budget />,
-			errorElement: <ErrorPage />,
-		},
+		
 	]);
 	return <RouterProvider router={router} />;
 }
